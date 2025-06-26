@@ -1,5 +1,7 @@
 import { Account } from "viem";
 import type { SmartAccountClient } from "permissionless";
+import type { Address } from "viem";
+
 import {
     createBundlerClient,
     createPaymasterClient,
@@ -15,6 +17,7 @@ export interface ShBundlerClientOptions {
   bundlerUrl: string;
   paymasterUrl: string;
   safeVersion?: string;
+  paymasterAddress?: Address;
 }
 
 export interface GasPriceResult {

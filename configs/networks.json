@@ -1,0 +1,9 @@
+{
+  "10143": {
+    "chainName": "Monad Testnet",
+    "bundlerUrl": "https://monad-testnet.4337-shbundler-fra.fastlane-labs.xyz",
+    "paymasterUrl": "https://monad-testnet.4337-shbundler-fra.fastlane-labs.xyz",
+    "paymasterAddress": "0x0000000000000000000000000000000000000000"
+  }
+}
+  

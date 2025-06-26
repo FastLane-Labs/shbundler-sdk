@@ -12,19 +12,32 @@ import {
   import { toSafeSmartAccount } from "permissionless/accounts";
   import { ShBundlerClientOptions, ShBundlerSDK } from "./types";
   import { getUserOperationGasPrice } from "./utils/gas";
+  import { fetchNetworkDefaults } from "./utils/networks";
   
   export async function createShBundlerClient(opts: ShBundlerClientOptions): Promise<ShBundlerSDK> {
-    const {
+    let {
       signer,
       rpcUrl,
       bundlerUrl,
       paymasterUrl,
+      paymasterAddress,
       safeVersion = "1.4.1",
     } = opts;
-  
+
     const publicClient = createPublicClient({
       transport: http(rpcUrl),
     });
+
+    if (!bundlerUrl || !paymasterUrl || !paymasterAddress) {
+      const chainId = await publicClient.getChainId();
+      const defaults = await fetchNetworkDefaults(chainId);
+
+      if (!defaults) throw new Error(`No defaults found for chain ID ${chainId}`);
+
+      bundlerUrl = bundlerUrl || defaults.bundlerUrl;
+      paymasterUrl = paymasterUrl || defaults.paymasterUrl;
+      paymasterAddress = paymasterAddress || defaults.paymasterAddress;
+    }
   
     const walletClient = createWalletClient({
       transport: http(rpcUrl),
