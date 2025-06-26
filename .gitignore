@@ -1,0 +1,16 @@
+node_modules/
+dist/
+pnpm-lock.yaml
+
+*.tsbuildinfo
+
+logs/
+*.log
+
+.env
+
+.vscode/
+.idea/
+
+.DS_Store
+
