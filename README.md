@@ -6,6 +6,7 @@ A TypeScript SDK for interacting with Fastlane's 4337 bundler (ShBundler), desig
 
 ```bash
 pnpm add @fastlane-labs/shbundler-sdk
+```
 
 ## Example 
 
