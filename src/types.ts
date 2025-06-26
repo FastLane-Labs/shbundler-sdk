@@ -14,10 +14,10 @@ import {
 export interface ShBundlerClientOptions {
   signer: Account;
   rpcUrl: string;
-  bundlerUrl: string;
-  paymasterUrl: string;
-  safeVersion?: string;
+  bundlerUrl?: string;
+  paymasterUrl?: string;
   paymasterAddress?: Address;
+  safeVersion?: string;
 }
 
 export interface GasPriceResult {
