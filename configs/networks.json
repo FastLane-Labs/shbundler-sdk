@@ -3,7 +3,7 @@
     "chainName": "Monad Testnet",
     "bundlerUrl": "https://monad-testnet.4337-shbundler-fra.fastlane-labs.xyz",
     "paymasterUrl": "https://monad-testnet.4337-shbundler-fra.fastlane-labs.xyz",
-    "paymasterAddress": "0x0000000000000000000000000000000000000000"
+    "paymasterAddress": "0x57Aebc56F9cC335D66d555d700b119D9EC4D9356"
   }
 }
   
