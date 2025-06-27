@@ -1,6 +1,6 @@
-import { Account } from "viem";
+import { LocalAccount } from "viem";
 import type { SmartAccountClient } from "permissionless";
-import type { Address } from "viem";
+import type { Address, Chain } from "viem";
 
 import {
     createBundlerClient,
@@ -12,12 +12,18 @@ import {
   } from "viem";
 
 export interface ShBundlerClientOptions {
-  signer: Account;
+  signer: LocalAccount;
   rpcUrl: string;
+  chain: Chain;
   bundlerUrl?: string;
   paymasterUrl?: string;
   paymasterAddress?: Address;
-  safeVersion?: string;
+  entryPointVersion?: "0.7" | "0.8";
+  paymasterMode?: "user" | "sponsor";
+  sponsor?: Address;
+  sponsorSignature?: `0x${string}`;
+  validUntil?: string;
+  validAfter?: string;
 }
 
 export interface GasPriceResult {
