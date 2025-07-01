@@ -1,6 +1,6 @@
 {
   "name": "@fastlane-labs/shbundler-sdk",
-  "version": "1.0.13",
+  "version": "1.0.14",
   "description": "SDK for interacting with Fastlane's 4337 ShBundler",
   "author": "Fastlane Labs",
   "license": "MIT",

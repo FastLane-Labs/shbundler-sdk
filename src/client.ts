@@ -12,7 +12,7 @@ import {
   import { toAccount } from "viem/accounts";
   import { createSmartAccountClient } from "permissionless";
   import { toSimpleSmartAccount } from "permissionless/accounts";
-  import { ShBundlerClientOptions, ShBundlerSDK } from "./types";
+  import { ShBundlerClientOptions, ShBundlerSDK, SendUserOperationParams } from "./types";
   import { getUserOperationGasPrice } from "./utils/gas";
   import { fetchNetworkDefaults } from "./utils/networks";
 
@@ -25,11 +25,6 @@ import {
       paymasterUrl,
       paymasterAddress,
       entryPointVersion = "0.8",
-      paymasterMode = "user",
-      sponsor,
-      sponsorSignature,
-      validUntil,
-      validAfter,
     } = opts;
 
     const publicClient = createPublicClient({
@@ -55,7 +50,7 @@ import {
 
     const entryPointAddress = entryPointVersion === "0.7" ? entryPoint07Address : entryPoint08Address;
   
-    const smartAccount = await toSimpleSmartAccount({
+    const smartAccount: Awaited<ReturnType<typeof toSimpleSmartAccount>> = await toSimpleSmartAccount({
       client: publicClient,
       entryPoint: {
         address: entryPointAddress,
@@ -80,24 +75,32 @@ import {
           estimateFeesPerGas: async () => getUserOperationGasPrice(bundlerClient),
       },
     });
-  
-    const smartAccountClient = createSmartAccountClient({
-      client: publicClient,
-      bundlerTransport: http(bundlerUrl),
-      account: smartAccount,
-      userOperation: {
-        estimateFeesPerGas: async () => getUserOperationGasPrice(bundlerClient),
-      },
-      paymaster: paymasterClient,
-      paymasterContext: {
-        paymasterAddress: paymasterAddress,
-        mode: paymasterMode,
-        sponsor: paymasterMode === "user" ? signer.address : sponsor,
-        sponsorSignature: sponsorSignature,
-        validUntil: validUntil,
-        validAfter: validAfter,
-      }
-    });
+
+    const sendUserOperation = async ({
+      to,
+      data,
+      chain,
+      paymasterContext,
+      entryPointVersion = "0.8",
+    }: SendUserOperationParams) => {
+      const dynamicSmartAccountClient = createSmartAccountClient({
+        client: publicClient,
+        bundlerTransport: http(bundlerUrl!),
+        account: smartAccount,
+        userOperation: {
+          estimateFeesPerGas: async () => getUserOperationGasPrice(bundlerClient),
+        },
+        paymaster: paymasterClient,
+        paymasterContext: paymasterContext,
+      });
+    
+      return await dynamicSmartAccountClient.sendTransaction({
+        account: smartAccount,
+        to,
+        data,
+        chain,
+      });
+    };
   
     return {
       publicClient,
@@ -105,8 +108,6 @@ import {
       smartAccount,
       paymasterClient,
       bundlerClient,
-      smartAccountClient,
-      sendUserOperation: smartAccountClient.sendTransaction,
+      sendUserOperation,
     };
   }
-  

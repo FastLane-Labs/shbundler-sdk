@@ -19,11 +19,6 @@ export interface ShBundlerClientOptions {
   paymasterUrl?: string;
   paymasterAddress?: Address;
   entryPointVersion?: "0.7" | "0.8";
-  paymasterMode?: "user" | "sponsor";
-  sponsor?: Address;
-  sponsorSignature?: `0x${string}`;
-  validUntil?: string;
-  validAfter?: string;
 }
 
 export interface GasPriceResult {
@@ -31,12 +26,25 @@ export interface GasPriceResult {
   maxPriorityFeePerGas: bigint;
 }
 
+export interface SendUserOperationParams {
+  to: Address;
+  data: `0x${string}`;
+  chain: Chain;
+  paymasterContext?: {
+    paymasterAddress: Address;
+    mode: "user" | "sponsor";
+    sponsor?: Address;
+    sponsorSignature?: `0x${string}`;
+    validUntil?: string;
+    validAfter?: string;
+  };
+  entryPointVersion?: "0.7" | "0.8";
+}
 export interface ShBundlerSDK {
   publicClient: ReturnType<typeof createPublicClient>;
   walletClient: ReturnType<typeof createWalletClient>;
   smartAccount: any;
   paymasterClient: ReturnType<typeof createPaymasterClient>;
   bundlerClient: ReturnType<typeof createBundlerClient>;
-  smartAccountClient: SmartAccountClient;
-  sendUserOperation: SmartAccountClient["sendTransaction"];
+  sendUserOperation: (params: SendUserOperationParams) => Promise<`0x${string}`>;
 }
