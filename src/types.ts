@@ -38,7 +38,6 @@ export interface SendUserOperationParams {
     validUntil?: string;
     validAfter?: string;
   };
-  entryPointVersion?: "0.7" | "0.8";
 }
 export interface ShBundlerSDK {
   publicClient: ReturnType<typeof createPublicClient>;

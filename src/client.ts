@@ -81,7 +81,6 @@ import {
       data,
       chain,
       paymasterContext,
-      entryPointVersion = "0.8",
     }: SendUserOperationParams) => {
       const dynamicSmartAccountClient = createSmartAccountClient({
         client: publicClient,
