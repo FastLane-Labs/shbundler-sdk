@@ -20,15 +20,6 @@ const client = await createShBundlerClient({
   signer,
   rpcUrl: "https://rpc.monadlabs.dev", 
   chain: monadTestnet, // a viem chain object
-  // optional parameters
-  // bundlerUrl: string // defaults to specificed in `networks.json`
-  // paymasterUrl: string // defaults to specificed in `networks.json`
-  // paymasterAddress: Address // defaults to specificed in `networks.json`
-  // paymasterMode: "user" | "sponsor" // defaults to "user"
-  // sponsor: Address // required if paymasterMode is "sponsor"
-  // sponsorSignature: `0x${string}` // required if paymasterMode is "sponsor"
-  // validUntil: string // required if paymasterMode is "sponsor"
-  // validAfter: string // required if paymasterMode is "sponsor"
 });
 
 await client.sendUserOperation({
