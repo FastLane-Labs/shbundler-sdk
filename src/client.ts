@@ -9,6 +9,9 @@ import {
     entryPoint07Address,
     entryPoint08Address,
   } from "viem/account-abstraction";
+  import {
+    sendUserOperation as sendUserOperationViem,
+  } from "viem/account-abstraction";
   import { toAccount } from "viem/accounts";
   import { createSmartAccountClient } from "permissionless";
   import { toSimpleSmartAccount } from "permissionless/accounts";
@@ -84,6 +87,7 @@ import {
     }: SendUserOperationParams) => {
       const dynamicSmartAccountClient = createSmartAccountClient({
         client: publicClient,
+        chain: chain,
         bundlerTransport: http(bundlerUrl!),
         account: smartAccount,
         userOperation: {
@@ -92,13 +96,13 @@ import {
         paymaster: paymasterClient,
         paymasterContext: paymasterContext,
       });
-    
-      return await dynamicSmartAccountClient.sendTransaction({
+
+      const userOpHash = await sendUserOperationViem(dynamicSmartAccountClient, {
         account: smartAccount,
-        to,
-        data,
-        chain,
+        calls: [{ to, data }],  
       });
+
+      return userOpHash;
     };
   
     return {
