@@ -12,6 +12,7 @@ import {
   import {
     sendUserOperation as sendUserOperationViem,
   } from "viem/account-abstraction";
+  import { toSafeSmartAccount } from "permissionless/accounts";
   import { toAccount } from "viem/accounts";
   import { createSmartAccountClient } from "permissionless";
   import { toSimpleSmartAccount } from "permissionless/accounts";
@@ -34,9 +35,9 @@ import {
       transport: http(rpcUrl),
       chain: chain,
     });
+    const chainId = await publicClient.getChainId();
 
     if (!bundlerUrl || !paymasterUrl || !paymasterAddress) {
-      const chainId = await publicClient.getChainId();
       const defaults = await fetchNetworkDefaults(chainId);
 
       if (!defaults) throw new Error(`No defaults found for chain ID ${chainId}`);
@@ -53,7 +54,7 @@ import {
 
     const entryPointAddress = entryPointVersion === "0.7" ? entryPoint07Address : entryPoint08Address;
   
-    const smartAccount: Awaited<ReturnType<typeof toSimpleSmartAccount>> = await toSimpleSmartAccount({
+    const smartAccountSimple: Awaited<ReturnType<typeof toSimpleSmartAccount>> = await toSimpleSmartAccount({
       client: publicClient,
       entryPoint: {
         address: entryPointAddress,
@@ -61,6 +62,26 @@ import {
       },
       owner: toAccount(signer),
     });
+
+    // temporary fix for monad testnet
+    // update after entrypoint 8 is deployed on monad testnet
+    const smartAccountV08MonadTestnet = await toSafeSmartAccount({
+      client: publicClient as any,
+      entryPoint: {
+        address: entryPoint08Address,
+        version: "0.7",
+      },
+      owners: [signer as any],
+      version: "1.4.1",
+      safe4337ModuleAddress: "0x02b336F533F2de3F221540eF56583e9cb8E65203",
+      safeProxyFactoryAddress: "0xd9d2Ba03a7754250FDD71333F444636471CACBC4",
+      safeSingletonAddress: "0x639245e8476E03e789a244f279b5843b9633b2E7",
+      safeModuleSetupAddress: "0x2dd68b007B46fBe91B9A7c3EDa5A7a1063cB5b47",
+      multiSendAddress: "0x7B21BBDBdE8D01Df591fdc2dc0bE9956Dde1e16C",
+      multiSendCallOnlyAddress: "0x32228dDEA8b9A2bd7f2d71A958fF241D79ca5eEC",
+    });
+
+    const smartAccount = chainId !== 10143 ? smartAccountSimple : entryPointVersion === "0.7" ? smartAccountSimple : smartAccountV08MonadTestnet;
   
     const paymasterClient = createPaymasterClient({
       transport: http(paymasterUrl),
