@@ -1,5 +1,4 @@
 import { LocalAccount } from "viem";
-import type { SmartAccountClient } from "permissionless";
 import type { Address, Chain } from "viem";
 
 import {
@@ -46,4 +45,13 @@ export interface ShBundlerSDK {
   paymasterClient: ReturnType<typeof createPaymasterClient>;
   bundlerClient: ReturnType<typeof createBundlerClient>;
   sendUserOperation: (params: SendUserOperationParams) => Promise<`0x${string}`>;
+}
+
+export interface ShBundlerFromSmartAccountOptions {
+  smartAccount: any;
+  rpcUrl: string;
+  chain: Chain;
+  bundlerUrl: string;
+  paymasterUrl: string;
+  paymasterAddress: Address;
 }
